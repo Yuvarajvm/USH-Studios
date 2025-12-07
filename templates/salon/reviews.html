@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .rating-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .rating-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .rating-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .rating-label {
+            font-size: 14px;
+            color: #686b78;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .reviewer-info {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .reviewer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .reviewer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .review-date {
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .review-rating {
+            background: #48c479;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .review-comment {
+            color: #3d4152;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">🏪 GlamHub Partner</div>
+        <nav class="nav-menu">
+            <a href="{{ url_for('salon_dashboard') }}" class="nav-item">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="{{ url_for('salon_services') }}" class="nav-item">
+                <span>✂️</span> Services
+            </a>
+            <a href="{{ url_for('salon_products') }}" class="nav-item">
+                <span>📦</span> Products
+            </a>
+            <a href="{{ url_for('salon_bookings') }}" class="nav-item">
+                <span>📅</span> Bookings
+            </a>
+            <a href="{{ url_for('salon_orders') }}" class="nav-item">
+                <span>🛍️</span> Orders
+            </a>
+            <a href="{{ url_for('salon_staff') }}" class="nav-item">
+                <span>👥</span> Staff
+            </a>
+            <a href="{{ url_for('salon_reviews') }}" class="nav-item active">
+                <span>⭐</span> Reviews
+            </a>
+            <a href="{{ url_for('salon_settings') }}" class="nav-item">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Customer Reviews</h1>
+            <p style="color: #686b78; margin-top: 4px;">See what customers are saying about your salon</p>
+        </div>
+
+        <div class="rating-summary">
+            <div class="rating-card">
+                <div class="rating-value">{{ "%.1f"|format(salon.rating) }}</div>
+                <div class="rating-label">⭐ Average Rating</div>
+            </div>
+            <div class="rating-card">
+                <div class="rating-value">{{ salon.total_reviews }}</div>
+                <div class="rating-label">Total Reviews</div>
+            </div>
+            <div class="rating-card">
+                <div class="rating-value">{{ reviews|length }}</div>
+                <div class="rating-label">Recent Reviews</div>
+            </div>
+        </div>
+
+        {% if reviews|length > 0 %}
+        <div class="reviews-list">
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">{{ review.user.name[0] }}</div>
+                        <div>
+                            <div class="reviewer-name">{{ review.user.name }}</div>
+                            <div class="review-date">{{ review.created_at.strftime('%B %d, %Y') }}</div>
+                        </div>
+                    </div>
+                    <div class="review-rating">⭐ {{ review.rating }}</div>
+                </div>
+                <p class="review-comment">{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div style="font-size: 64px;">⭐</div>
+            <h3 style="font-size: 24px; color: #1c1c1c; margin: 20px 0 12px;">No Reviews Yet</h3>
+            <p style="color: #686b78;">Customer reviews will appear here</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Salons - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .search-section {
+            background: white;
+            padding: 32px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #e9eaed;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .results-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .results-header {
+            margin-bottom: 24px;
+        }
+
+        .results-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .salon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .salon-card {
+            background: white;
+            border: 1px solid #e9eaed;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .salon-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        .salon-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .salon-content {
+            padding: 20px;
+        }
+
+        .salon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .salon-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .salon-rating {
+            background: #48c479;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .salon-location {
+            color: #686b78;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .salon-footer {
+            padding-top: 16px;
+            border-top: 1px solid #e9eaed;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="logo">GlamHub</a>
+            <div>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('profile') }}" style="margin-right: 20px; text-decoration: none; color: #3d4152;">Profile</a>
+                    <a href="{{ url_for('customer_logout') }}" style="text-decoration: none; color: #667eea;">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('customer_login') }}" style="text-decoration: none; color: #667eea;">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <section class="search-section">
+        <div class="search-container">
+            <form action="{{ url_for('search') }}" method="GET" class="search-box">
+                <input type="text" name="city" placeholder="Enter city" value="{{ city }}">
+                <input type="text" name="q" placeholder="Search salon name" value="{{ query }}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <div class="results-container">
+        <div class="results-header">
+            <h2>{{ salons|length }} Salons Found</h2>
+        </div>
+
+        <div class="salon-grid">
+            {% for salon in salons %}
+            <a href="{{ url_for('salon_detail', salon_id=salon.id) }}" class="salon-card">
+                <img src="{{ salon.image_url or 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&h=300&fit=crop' }}" 
+                     alt="{{ salon.name }}" class="salon-image">
+                <div class="salon-content">
+                    <div class="salon-header">
+                        <div class="salon-name">{{ salon.name }}</div>
+                        <div class="salon-rating">⭐ {{ "%.1f"|format(salon.rating) }}</div>
+                    </div>
+                    <div class="salon-location">📍 {{ salon.city }}</div>
+                    <div class="salon-footer">
+                        <span style="font-size: 14px; color: #686b78;">{{ salon.total_reviews }} reviews</span>
+                        <span class="view-btn">View Details</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if salons|length == 0 %}
+        <div style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🔍</div>
+            <h3 style="font-size: 24px; color: #1c1c1c; margin-bottom: 12px;">No salons found</h3>
+            <p style="color: #686b78;">Try searching with a different location or keyword</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

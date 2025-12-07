@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            padding: 20px;
+            color: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 32px;
+        }
+
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 32px;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #fc801915 0%, #ff6b6b15 100%);
+        }
+
+        .item-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .item-details .category {
+            font-size: 13px;
+            color: #686b78;
+            background: #f9fafb;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .item-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fc8019;
+            margin-bottom: 12px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 2px solid #e9eaed;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            border-color: #fc8019;
+            color: #fc8019;
+        }
+
+        .qty-display {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .btn-remove {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-remove:hover {
+            background: #e55555;
+        }
+
+        .item-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .cart-summary h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 24px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .summary-row:last-of-type {
+            border-bottom: 2px solid #e9eaed;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fc8019;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-continue {
+            width: 100%;
+            background: white;
+            color: #fc8019;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #fc8019;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .empty-cart {
+            background: white;
+            border-radius: 16px;
+            padding: 80px 40px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .empty-cart h2 {
+            font-size: 28px;
+            color: #1c1c1c;
+            margin: 20px 0 12px;
+        }
+
+        .empty-cart p {
+            color: #686b78;
+            margin-bottom: 24px;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #e6ffe6;
+            color: #00cc66;
+            border: 1px solid #00cc66;
+        }
+
+        .alert-warning {
+            background: #fff4e6;
+            color: #ff9900;
+            border: 1px solid #ff9900;
+        }
+
+        @media (max-width: 768px) {
+            .cart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+            }
+
+            .item-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="logo">🛍️ GlamHub</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('cart') }}">Cart</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('customer_logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>🛒 Shopping Cart</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if cart_items|length > 0 %}
+        <div class="cart-grid">
+            <!-- Cart Items -->
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <img src="{{ item.product.image_url or 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=200&h=200&fit=crop' }}" 
+                         alt="{{ item.product.name }}" 
+                         class="item-image">
+                    
+                    <div class="item-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <span class="category">{{ item.product.category }}</span>
+                        <div class="item-price">₹{{ item.product.price|int }}</div>
+                        
+                        <div class="quantity-controls">
+                            <form method="POST" action="{{ url_for('update_cart', item_id=item.id) }}" style="display: inline;">
+                                <input type="hidden" name="action" value="decrease">
+                                <button type="submit" class="qty-btn">−</button>
+                            </form>
+                            
+                            <span class="qty-display">{{ item.quantity }}</span>
+                            
+                            <form method="POST" action="{{ url_for('update_cart', item_id=item.id) }}" style="display: inline;">
+                                <input type="hidden" name="action" value="increase">
+                                <button type="submit" class="qty-btn">+</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="item-actions">
+                        <div class="item-total">₹{{ (item.product.price * item.quantity)|int }}</div>
+                        <form method="POST" action="{{ url_for('remove_from_cart', item_id=item.id) }}">
+                            <button type="submit" class="btn-remove">🗑️ Remove</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+                
+                <div class="summary-row">
+                    <span>Subtotal ({{ cart_items|length }} items)</span>
+                    <span>₹{{ total|int }}</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span>₹50</span>
+                </div>
+                
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span>₹{{ (total + 50)|int }}</span>
+                </div>
+
+                <a href="{{ url_for('checkout') }}" class="btn-checkout">
+                    Proceed to Checkout
+                </a>
+
+                <a href="{{ url_for('home') }}" class="btn-continue">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <div style="font-size: 80px; margin-bottom: 24px;">🛒</div>
+            <h2>Your Cart is Empty</h2>
+            <p>Looks like you haven't added any products yet</p>
+            <a href="{{ url_for('home') }}" class="btn-checkout" style="max-width: 300px; margin: 0 auto;">
+                Start Shopping
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 48px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            font-size: 50px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #686b78;
+            margin-bottom: 40px;
+        }
+
+        .booking-details {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #686b78;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        
+        <h1>Booking Confirmed!</h1>
+        <p class="subtitle">Your appointment has been successfully booked</p>
+
+        <div class="booking-details">
+            <div class="detail-row">
+                <span class="detail-label">Booking ID</span>
+                <span class="detail-value">#{{ booking.id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Service</span>
+                <span class="detail-value">{{ booking.service.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Salon</span>
+                <span class="detail-value">{{ booking.salon.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Date</span>
+                <span class="detail-value">{{ booking.booking_date.strftime('%B %d, %Y') }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Time</span>
+                <span class="detail-value">{{ booking.booking_time.strftime('%I:%M %p') }}</span>
+            </div>
+            {% if booking.staff %}
+            <div class="detail-row">
+                <span class="detail-label">Staff</span>
+                <span class="detail-value">{{ booking.staff.name }}</span>
+            </div>
+            {% endif %}
+            <div class="detail-row">
+                <span class="detail-label">Amount</span>
+                <span class="detail-value" style="color: #667eea; font-size: 18px;">₹{{ booking.total_amount|int }}</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="{{ url_for('my_bookings') }}" class="btn btn-primary">View My Bookings</a>
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

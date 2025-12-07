@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Dashboard - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            padding: 20px;
+            color: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .welcome-card h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 12px;
+        }
+
+        .welcome-card p {
+            font-size: 16px;
+            color: #686b78;
+        }
+
+        .status-banner {
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .status-banner.offline {
+            background: linear-gradient(135deg, #ff6b6b 0%, #cc0000 100%);
+        }
+
+        .status-banner h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .toggle-btn {
+            background: white;
+            color: #48c479;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .toggle-btn.offline {
+            color: #ff6b6b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon.orange {
+            background: #fc801915;
+        }
+
+        .stat-icon.green {
+            background: #48c47915;
+        }
+
+        .stat-icon.blue {
+            background: #667eea15;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #686b78;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            color: #1c1c1c;
+            margin: 20px 0 12px;
+        }
+
+        .empty-state p {
+            color: #686b78;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 24px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .info-item {
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #686b78;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-card.orange {
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+        }
+
+        .action-card.green {
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+        }
+
+        .action-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-banner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>🚗</span>
+                <span>GlamHub Delivery</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('delivery_dashboard') }}" class="active">Dashboard</a>
+                <a href="{{ url_for('delivery_orders') }}">Orders</a>
+                <a href="{{ url_for('delivery_history') }}">History</a>
+                <a href="{{ url_for('delivery_logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1>Welcome, {{ current_user.name }}!</h1>
+            <p>Delivery Partner Dashboard</p>
+        </div>
+
+        <div class="status-banner" id="statusBanner">
+            <div>
+                <h3 id="statusText">🟢 You are Online</h3>
+                <p style="font-size: 14px; opacity: 0.9; margin-top: 4px;" id="statusDescription">Ready to accept deliveries</p>
+            </div>
+            <button class="toggle-btn" id="toggleBtn" onclick="toggleStatus()">Go Offline</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon orange">📦</div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">Today's Deliveries</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">💰</div>
+                <div class="stat-value">₹0</div>
+                <div class="stat-label">Today's Earnings</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue">🚚</div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">Total Deliveries</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">⭐</div>
+                <div class="stat-value">0.0</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📋 Vehicle Information</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Vehicle Type</div>
+                    <div class="info-value">{{ current_user.delivery_partner_profile[0].vehicle_type if current_user.delivery_partner_profile else 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Vehicle Number</div>
+                    <div class="info-value">{{ current_user.delivery_partner_profile[0].vehicle_number if current_user.delivery_partner_profile else 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value" style="color: #48c479;">✓ Verified</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Account Status</div>
+                    <div class="info-value" style="color: #48c479;">Active</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">⚡ Quick Actions</div>
+            <div class="quick-actions">
+                <a href="{{ url_for('delivery_orders') }}" class="action-card orange">
+                    <div style="font-size: 40px;">📦</div>
+                    <h3>View Orders</h3>
+                </a>
+                
+                <a href="{{ url_for('delivery_history') }}" class="action-card green">
+                    <div style="font-size: 40px;">📊</div>
+                    <h3>View History</h3>
+                </a>
+                
+                <a href="#" class="action-card" onclick="alert('Earnings feature coming soon!'); return false;">
+                    <div style="font-size: 40px;">💰</div>
+                    <h3>My Earnings</h3>
+                </a>
+            </div>
+        </div>
+
+        <div class="empty-state">
+            <div style="font-size: 64px; margin-bottom: 20px;">📦</div>
+            <h2>No Active Deliveries</h2>
+            <p>New delivery requests will appear here when you're online</p>
+        </div>
+    </div>
+
+    <script>
+        // Store online status in localStorage
+        let isOnline = localStorage.getItem('deliveryStatus') !== 'offline';
+
+        // Initialize status on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!isOnline) {
+                setOfflineStatus();
+            }
+        });
+
+        function toggleStatus() {
+            isOnline = !isOnline;
+            
+            // Save status to localStorage
+            localStorage.setItem('deliveryStatus', isOnline ? 'online' : 'offline');
+            
+            if (isOnline) {
+                setOnlineStatus();
+            } else {
+                setOfflineStatus();
+            }
+        }
+
+        function setOnlineStatus() {
+            const banner = document.getElementById('statusBanner');
+            const statusText = document.getElementById('statusText');
+            const statusDescription = document.getElementById('statusDescription');
+            const toggleBtn = document.getElementById('toggleBtn');
+            
+            banner.classList.remove('offline');
+            toggleBtn.classList.remove('offline');
+            
+            statusText.innerHTML = '🟢 You are Online';
+            statusDescription.innerHTML = 'Ready to accept deliveries';
+            toggleBtn.innerHTML = 'Go Offline';
+            toggleBtn.style.color = '#48c479';
+        }
+
+        function setOfflineStatus() {
+            const banner = document.getElementById('statusBanner');
+            const statusText = document.getElementById('statusText');
+            const statusDescription = document.getElementById('statusDescription');
+            const toggleBtn = document.getElementById('toggleBtn');
+            
+            banner.classList.add('offline');
+            toggleBtn.classList.add('offline');
+            
+            statusText.innerHTML = '🔴 You are Offline';
+            statusDescription.innerHTML = 'Not receiving delivery requests';
+            toggleBtn.innerHTML = 'Go Online';
+            toggleBtn.style.color = '#ff6b6b';
+        }
+    </script>
+</body>
+</html>

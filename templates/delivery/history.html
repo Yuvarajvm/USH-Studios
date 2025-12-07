@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery History - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            padding: 20px;
+            color: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #686b78;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h4 {
+            font-size: 14px;
+            color: #686b78;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .stat-card.earnings {
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            color: white;
+        }
+
+        .stat-card.earnings h4 {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-card.earnings .stat-value {
+            color: white;
+        }
+
+        .filter-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .filter-bar select,
+        .filter-bar input {
+            padding: 10px 16px;
+            border: 2px solid #e9eaed;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-bar select:focus,
+        .filter-bar input:focus {
+            outline: none;
+            border-color: #fc8019;
+        }
+
+        .btn-filter {
+            background: #fc8019;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .history-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 24px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .history-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .history-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .date-day {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1c1c1c;
+            line-height: 1;
+        }
+
+        .date-month {
+            font-size: 13px;
+            color: #686b78;
+            margin-top: 4px;
+        }
+
+        .history-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .history-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #686b78;
+            flex-wrap: wrap;
+        }
+
+        .history-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .history-earnings {
+            text-align: right;
+        }
+
+        .earnings-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #48c479;
+            margin-bottom: 4px;
+        }
+
+        .earnings-label {
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e6ffe6;
+            color: #00cc66;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 16px;
+            padding: 80px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #1c1c1c;
+            margin: 20px 0 12px;
+        }
+
+        .empty-state p {
+            color: #686b78;
+        }
+
+        @media (max-width: 768px) {
+            .history-card {
+                grid-template-columns: 1fr;
+            }
+
+            .history-date {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .history-earnings {
+                text-align: left;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .filter-bar select,
+            .filter-bar input,
+            .btn-filter {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>🚗</span>
+                <span>GlamHub Delivery</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('delivery_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('delivery_orders') }}">Orders</a>
+                <a href="{{ url_for('delivery_history') }}" class="active">History</a>
+                <a href="{{ url_for('delivery_logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Delivery History</h1>
+            <p>View your past deliveries and earnings</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card earnings">
+                <h4>Total Earnings</h4>
+                <div class="stat-value">₹{{ total_earnings|int }}</div>
+            </div>
+
+            <div class="stat-card">
+                <h4>Total Deliveries</h4>
+                <div class="stat-value">{{ total_deliveries }}</div>
+            </div>
+
+            <div class="stat-card">
+                <h4>This Month</h4>
+                <div class="stat-value">{{ total_deliveries }}</div>
+            </div>
+
+            <div class="stat-card">
+                <h4>Average Rating</h4>
+                <div class="stat-value">{{ "%.1f"|format(avg_rating) }} ⭐</div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <select id="timeFilter">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+            </select>
+
+            <div style="margin-left: auto; color: #686b78; font-size: 14px;">
+                <strong>{{ completed_orders|length }}</strong> deliveries found
+            </div>
+        </div>
+
+        <!-- History List -->
+        {% if completed_orders|length > 0 %}
+        <div class="history-list">
+            {% for order in completed_orders %}
+            <div class="history-card">
+                <div class="history-date">
+                    <div class="date-day">{{ order.delivered_at.strftime('%d') if order.delivered_at else order.created_at.strftime('%d') }}</div>
+                    <div class="date-month">{{ order.delivered_at.strftime('%b %Y') if order.delivered_at else order.created_at.strftime('%b %Y') }}</div>
+                </div>
+
+                <div class="history-details">
+                    <h3>Order #{{ order.id }} <span class="status-badge">✓ Delivered</span></h3>
+                    <div class="history-meta">
+                        <span>🏪 {{ order.salon.name }}</span>
+                        <span>📍 {{ order.delivery_address.split(',')[0] if order.delivery_address else 'N/A' }}</span>
+                        <span>📦 {{ order.items|length }} items</span>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 13px; color: #686b78;">
+                        Delivered to: <strong>{{ order.customer.name }}</strong> • {{ order.delivered_at.strftime('%I:%M %p') if order.delivered_at else 'N/A' }}
+                    </div>
+                </div>
+
+                <div class="history-earnings">
+                    <div class="earnings-amount">₹{{ order.delivery_fee|int }}</div>
+                    <div class="earnings-label">Delivery Fee</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div style="font-size: 64px; margin-bottom: 20px;">📋</div>
+            <h3>No Delivery History</h3>
+            <p>Your completed deliveries will appear here. Accept and complete orders to start earning!</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('timeFilter').addEventListener('change', function() {
+            const filter = this.value;
+            console.log('Filter selected:', filter);
+            // In production, this would filter the orders
+            alert('Filter: ' + filter + ' - This would filter your delivery history.');
+        });
+    </script>
+</body>
+</html>

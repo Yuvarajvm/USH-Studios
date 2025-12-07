@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: #1c1c1c;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 32px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9eaed;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #fc8019;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .payment-method {
+            padding: 16px;
+            border: 2px solid #e9eaed;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .payment-method.selected {
+            border-color: #fc8019;
+            background: #fc801905;
+        }
+
+        .payment-method input[type="radio"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .order-summary {
+            position: sticky;
+            top: 20px;
+        }
+
+        .cart-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #fc8019;
+        }
+
+        .item-qty {
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fc8019;
+            padding-top: 16px;
+        }
+
+        .btn-place-order {
+            width: 100%;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-place-order:hover {
+            transform: translateY(-2px);
+        }
+
+        .cod-info {
+            background: #fff4e6;
+            border: 1px solid #fc8019;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #fc8019;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Checkout</h1>
+
+        <form method="POST" action="{{ url_for('checkout') }}">
+            <div class="checkout-grid">
+                <!-- Left Section -->
+                <div>
+                    <!-- Delivery Address -->
+                    <div class="section">
+                        <h2>📍 Delivery Address</h2>
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input type="text" name="name" required value="{{ current_user.name }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" name="phone" required value="{{ current_user.phone }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Complete Address *</label>
+                            <textarea name="address" required placeholder="House No, Street, Locality, Landmark"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="section" style="margin-top: 24px;">
+                        <h2>💳 Payment Method</h2>
+                        <div class="payment-method selected" onclick="selectPayment(this)">
+                            <input type="radio" name="payment_method" value="cod" checked>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">💵 Cash on Delivery</div>
+                                <div style="font-size: 13px; color: #686b78;">Pay with cash when the order is delivered</div>
+                            </div>
+                        </div>
+                        <div class="cod-info">
+                            ℹ️ Please keep exact change ready. Our delivery partner will collect ₹{{ (total + 50)|int }} at the time of delivery.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section - Order Summary -->
+                <div class="section order-summary">
+                    <h2>📦 Order Summary</h2>
+                    
+                    {% for item in cart_items %}
+                    <div class="cart-item">
+                        <div class="item-header">
+                            <span class="item-name">{{ item.product.name }}</span>
+                            <span class="item-price">₹{{ (item.product.price * item.quantity)|int }}</span>
+                        </div>
+                        <div class="item-qty">Quantity: {{ item.quantity }}</div>
+                    </div>
+                    {% endfor %}
+
+                    <div style="margin-top: 24px;">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>₹{{ total|int }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery Fee</span>
+                            <span>₹50</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Total Amount</span>
+                            <span>₹{{ (total + 50)|int }}</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-place-order">
+                        🚀 Place Order - COD
+                    </button>
+
+                    <div style="text-align: center; margin-top: 16px;">
+                        <a href="{{ url_for('cart') }}" style="color: #686b78; text-decoration: none; font-size: 14px;">← Back to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function selectPayment(element) {
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Dashboard - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .header p {
+            color: #686b78;
+            margin-top: 4px;
+        }
+
+        .btn-logout {
+            background: white;
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon.blue {
+            background: #667eea15;
+        }
+
+        .stat-icon.green {
+            background: #48c47915;
+        }
+
+        .stat-icon.orange {
+            background: #fc801915;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #686b78;
+        }
+
+        /* Recent Bookings */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e9eaed;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .booking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .booking-item {
+            padding: 16px;
+            border: 1px solid #e9eaed;
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .booking-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .booking-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .booking-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: #686b78;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fff4e6;
+            color: #ff9900;
+        }
+
+        .status-confirmed {
+            background: #e6f4ff;
+            color: #0066cc;
+        }
+
+        .status-completed {
+            background: #e6ffe6;
+            color: #00cc66;
+        }
+
+        .status-cancelled {
+            background: #ffe6e6;
+            color: #cc0000;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #686b78;
+        }
+
+        .empty-state div:first-child {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-item {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">🏪 GlamHub Partner</div>
+        <nav class="nav-menu">
+            <a href="{{ url_for('salon_dashboard') }}" class="nav-item active">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="{{ url_for('salon_services') }}" class="nav-item">
+                <span>✂️</span> Services
+            </a>
+            <a href="{{ url_for('salon_products') }}" class="nav-item">
+                <span>📦</span> Products
+            </a>
+            <a href="{{ url_for('salon_bookings') }}" class="nav-item">
+                <span>📅</span> Bookings
+            </a>
+            <a href="{{ url_for('salon_orders') }}" class="nav-item">
+                <span>🛍️</span> Orders
+            </a>
+            <a href="{{ url_for('salon_staff') }}" class="nav-item">
+                <span>👥</span> Staff
+            </a>
+            <a href="{{ url_for('salon_reviews') }}" class="nav-item">
+                <span>⭐</span> Reviews
+            </a>
+            <a href="{{ url_for('salon_settings') }}" class="nav-item">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>{{ salon.name }}</h1>
+                <p>Welcome back! Here's your business overview</p>
+            </div>
+            <a href="{{ url_for('salon_logout') }}" class="btn-logout">Logout</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📅</div>
+                <div class="stat-value">{{ total_bookings }}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">💰</div>
+                <div class="stat-value">₹{{ total_revenue|int }}</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">⭐</div>
+                <div class="stat-value">{{ "%.1f"|format(salon.rating) }}</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue">📦</div>
+                <div class="stat-value">{{ total_orders }}</div>
+                <div class="stat-label">Product Orders</div>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Recent Bookings</div>
+                <a href="{{ url_for('salon_bookings') }}" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View All →</a>
+            </div>
+
+            {% if bookings|length > 0 %}
+            <div class="booking-list">
+                {% for booking in bookings %}
+                <div class="booking-item">
+                    <div class="booking-info">
+                        <h4>{{ booking.service.name }}</h4>
+                        <div class="booking-meta">
+                            <span>👤 {{ booking.customer.name }}</span>
+                            <span>📅 {{ booking.booking_date.strftime('%B %d, %Y') }}</span>
+                            <span>⏰ {{ booking.booking_time.strftime('%I:%M %p') }}</span>
+                            <span>💰 ₹{{ booking.total_amount|int }}</span>
+                        </div>
+                    </div>
+                    <span class="status-badge status-{{ booking.status }}">{{ booking.status }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div>📅</div>
+                <p>No bookings yet</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Recent Product Orders</div>
+                <a href="{{ url_for('salon_orders') }}" style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">View All →</a>
+            </div>
+
+            {% if orders|length > 0 %}
+            <div class="booking-list">
+                {% for order in orders %}
+                <div class="booking-item">
+                    <div class="booking-info">
+                        <h4>Order #{{ order.id }}</h4>
+                        <div class="booking-meta">
+                            <span>👤 {{ order.customer.name }}</span>
+                            <span>📅 {{ order.created_at.strftime('%B %d, %Y') }}</span>
+                            <span>💰 ₹{{ order.total_amount|int }}</span>
+                        </div>
+                    </div>
+                    <span class="status-badge status-{{ order.status }}">{{ order.status }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div>📦</div>
+                <p>No orders yet</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Quick Actions</div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <a href="{{ url_for('add_service') }}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; transition: transform 0.2s ease;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">✂️</div>
+                    Add Service
+                </a>
+                
+                <a href="{{ url_for('salon_products') }}" style="background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%); color: white; padding: 20px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; transition: transform 0.2s ease;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">📦</div>
+                    Add Product
+                </a>
+                
+                <a href="{{ url_for('salon_staff') }}" style="background: linear-gradient(135deg, #48c479 0%, #3aa561 100%); color: white; padding: 20px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; transition: transform 0.2s ease;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+                    Manage Staff
+                </a>
+                
+                <a href="{{ url_for('salon_reviews') }}" style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); color: white; padding: 20px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 600; transition: transform 0.2s ease;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">⭐</div>
+                    View Reviews
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

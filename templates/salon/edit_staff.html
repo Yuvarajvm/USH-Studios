@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Staff Member - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .form-container h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9eaed;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #48c479;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1c1c1c;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: white;
+            color: #48c479;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: 2px solid #48c479;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #e6ffe6;
+            color: #00cc66;
+            border: 1px solid #00cc66;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">🏪 GlamHub Partner</div>
+        <nav class="nav-menu">
+            <a href="{{ url_for('salon_dashboard') }}" class="nav-item">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="{{ url_for('salon_services') }}" class="nav-item">
+                <span>✂️</span> Services
+            </a>
+            <a href="{{ url_for('salon_products') }}" class="nav-item">
+                <span>📦</span> Products
+            </a>
+            <a href="{{ url_for('salon_bookings') }}" class="nav-item">
+                <span>📅</span> Bookings
+            </a>
+            <a href="{{ url_for('salon_orders') }}" class="nav-item">
+                <span>🛍️</span> Orders
+            </a>
+            <a href="{{ url_for('salon_staff') }}" class="nav-item active">
+                <span>👥</span> Staff
+            </a>
+            <a href="{{ url_for('salon_reviews') }}" class="nav-item">
+                <span>⭐</span> Reviews
+            </a>
+            <a href="{{ url_for('salon_settings') }}" class="nav-item">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="form-container">
+            <h1>Edit Staff Member</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('edit_staff', staff_id=staff.id) }}">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="name" required placeholder="e.g., Priya Sharma" value="{{ staff.name }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" name="phone" required placeholder="e.g., 9876543210" value="{{ staff.phone }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Specialization *</label>
+                    <select name="specialization" required>
+                        <option value="">Select Specialization</option>
+                        <option value="Hair Stylist" {% if staff.specialization == 'Hair Stylist' %}selected{% endif %}>Hair Stylist</option>
+                        <option value="Makeup Artist" {% if staff.specialization == 'Makeup Artist' %}selected{% endif %}>Makeup Artist</option>
+                        <option value="Beautician" {% if staff.specialization == 'Beautician' %}selected{% endif %}>Beautician</option>
+                        <option value="Massage Therapist" {% if staff.specialization == 'Massage Therapist' %}selected{% endif %}>Massage Therapist</option>
+                        <option value="Spa Specialist" {% if staff.specialization == 'Spa Specialist' %}selected{% endif %}>Spa Specialist</option>
+                        <option value="Nail Technician" {% if staff.specialization == 'Nail Technician' %}selected{% endif %}>Nail Technician</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="is_available" name="is_available" {% if staff.is_available %}checked{% endif %}>
+                    <label for="is_available">Staff member is currently available for bookings</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Update Staff Member</button>
+                    <a href="{{ url_for('salon_staff') }}" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

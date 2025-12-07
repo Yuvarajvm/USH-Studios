@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #686b78;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid #e9eaed;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #686b78;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .bookings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #667eea;
+        }
+
+        .booking-card.pending {
+            border-left-color: #ff9900;
+        }
+
+        .booking-card.confirmed {
+            border-left-color: #667eea;
+        }
+
+        .booking-card.completed {
+            border-left-color: #48c479;
+        }
+
+        .booking-card.cancelled {
+            border-left-color: #ff6b6b;
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e9eaed;
+        }
+
+        .booking-id {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 4px;
+        }
+
+        .booking-time {
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pending {
+            background: #fff4e6;
+            color: #ff9900;
+        }
+
+        .status-confirmed {
+            background: #e6f4ff;
+            color: #0066cc;
+        }
+
+        .status-completed {
+            background: #e6ffe6;
+            color: #00cc66;
+        }
+
+        .status-cancelled {
+            background: #ffe6e6;
+            color: #cc0000;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .detail-icon {
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #686b78;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-accept {
+            flex: 1;
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-reject {
+            flex: 1;
+            background: white;
+            color: #ff6b6b;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 2px solid #ff6b6b;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-complete {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 16px;
+            padding: 80px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #1c1c1c;
+            margin: 20px 0 12px;
+        }
+
+        .empty-state p {
+            color: #686b78;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">🏪 GlamHub Partner</div>
+        <nav class="nav-menu">
+            <a href="{{ url_for('salon_dashboard') }}" class="nav-item">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="{{ url_for('salon_services') }}" class="nav-item">
+                <span>✂️</span> Services
+            </a>
+            <a href="{{ url_for('salon_products') }}" class="nav-item">
+                <span>📦</span> Products
+            </a>
+            <a href="{{ url_for('salon_bookings') }}" class="nav-item active">
+                <span>📅</span> Bookings
+            </a>
+            <a href="{{ url_for('salon_orders') }}" class="nav-item">
+                <span>🛍️</span> Orders
+            </a>
+            <a href="{{ url_for('salon_staff') }}" class="nav-item">
+                <span>👥</span> Staff
+            </a>
+            <a href="{{ url_for('salon_reviews') }}" class="nav-item">
+                <span>⭐</span> Reviews
+            </a>
+            <a href="{{ url_for('salon_settings') }}" class="nav-item">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Manage Bookings</h1>
+            <p>View and manage your salon bookings</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="filterBookings('all')">All Bookings</button>
+            <button class="tab" onclick="filterBookings('pending')">Pending</button>
+            <button class="tab" onclick="filterBookings('confirmed')">Confirmed</button>
+            <button class="tab" onclick="filterBookings('completed')">Completed</button>
+        </div>
+
+        <div class="bookings-list" id="bookingsList">
+            {% if bookings|length > 0 %}
+                {% for booking in bookings %}
+                <div class="booking-card {{ booking.status }}" data-status="{{ booking.status }}">
+                    <div class="booking-header">
+                        <div>
+                            <div class="booking-id">Booking #{{ booking.id }}</div>
+                            <div class="booking-time">Created {{ booking.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                        </div>
+                        <span class="status-badge status-{{ booking.status }}">{{ booking.status|title }}</span>
+                    </div>
+
+                    <div class="booking-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">👤</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Customer</div>
+                                <div class="detail-value">{{ booking.customer.name }}</div>
+                                <div style="font-size: 13px; color: #686b78; margin-top: 2px;">{{ booking.customer.phone }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">✂️</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Service</div>
+                                <div class="detail-value">{{ booking.service.name }}</div>
+                                <div style="font-size: 13px; color: #686b78; margin-top: 2px;">{{ booking.service.duration_minutes }} mins</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">📅</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Date & Time</div>
+                                <div class="detail-value">{{ booking.booking_date.strftime('%B %d, %Y') }}</div>
+                                <div style="font-size: 13px; color: #686b78; margin-top: 2px;">{{ booking.booking_time.strftime('%I:%M %p') }}</div>
+                            </div>
+                        </div>
+
+                        {% if booking.staff %}
+                        <div class="detail-item">
+                            <div class="detail-icon">👨‍💼</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Assigned Staff</div>
+                                <div class="detail-value">{{ booking.staff.name }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="detail-item">
+                            <div class="detail-icon">💰</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Amount</div>
+                                <div class="detail-value" style="color: #667eea;">₹{{ booking.total_amount|int }}</div>
+                            </div>
+                        </div>
+
+                        {% if booking.notes %}
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <div class="detail-icon">📝</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Notes</div>
+                                <div class="detail-value" style="font-weight: 400;">{{ booking.notes }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if booking.status == 'pending' %}
+                    <div class="booking-actions">
+                        <button class="btn-accept" onclick="acceptBooking({{ booking.id }})">
+                            ✓ Accept Booking
+                        </button>
+                        <button class="btn-reject" onclick="rejectBooking({{ booking.id }})">
+                            ✗ Reject
+                        </button>
+                    </div>
+                    {% elif booking.status == 'confirmed' %}
+                    <div class="booking-actions">
+                        <button class="btn-complete" onclick="completeBooking({{ booking.id }})">
+                            ✓ Mark as Completed
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 64px; margin-bottom: 20px;">📅</div>
+                    <h3>No Bookings Yet</h3>
+                    <p>Customer bookings will appear here</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function filterBookings(status) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const bookingCards = document.querySelectorAll('.booking-card');
+            bookingCards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function acceptBooking(bookingId) {
+            if (confirm('Accept this booking?')) {
+                fetch(`/salon/booking/accept/${bookingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Booking accepted successfully!');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unable to accept booking'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error accepting booking. Please try again.');
+                });
+            }
+        }
+
+        function rejectBooking(bookingId) {
+            if (confirm('Reject this booking? This action cannot be undone.')) {
+                fetch(`/salon/booking/reject/${bookingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Booking rejected.');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unable to reject booking'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error rejecting booking. Please try again.');
+                });
+            }
+        }
+
+        function completeBooking(bookingId) {
+            if (confirm('Mark this booking as completed?')) {
+                fetch(`/salon/booking/complete/${bookingId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Booking marked as completed!');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unable to complete booking'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error completing booking. Please try again.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

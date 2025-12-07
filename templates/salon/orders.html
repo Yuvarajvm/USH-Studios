@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .order-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: #686b78;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pending {
+            background: #fff4e6;
+            color: #ff9900;
+        }
+
+        .status-confirmed {
+            background: #e6f4ff;
+            color: #0066cc;
+        }
+
+        .status-preparing {
+            background: #fff4e6;
+            color: #ff9900;
+        }
+
+        .status-out_for_delivery {
+            background: #e6f4ff;
+            color: #0066cc;
+        }
+
+        .status-delivered {
+            background: #e6ffe6;
+            color: #00cc66;
+        }
+
+        .order-items {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">🏪 GlamHub Partner</div>
+        <nav class="nav-menu">
+            <a href="{{ url_for('salon_dashboard') }}" class="nav-item">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="{{ url_for('salon_services') }}" class="nav-item">
+                <span>✂️</span> Services
+            </a>
+            <a href="{{ url_for('salon_products') }}" class="nav-item">
+                <span>📦</span> Products
+            </a>
+            <a href="{{ url_for('salon_bookings') }}" class="nav-item">
+                <span>📅</span> Bookings
+            </a>
+            <a href="{{ url_for('salon_orders') }}" class="nav-item active">
+                <span>🛍️</span> Orders
+            </a>
+            <a href="{{ url_for('salon_staff') }}" class="nav-item">
+                <span>👥</span> Staff
+            </a>
+            <a href="{{ url_for('salon_reviews') }}" class="nav-item">
+                <span>⭐</span> Reviews
+            </a>
+            <a href="{{ url_for('salon_settings') }}" class="nav-item">
+                <span>⚙️</span> Settings
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Product Orders</h1>
+            <p style="color: #686b78; margin-top: 4px;">Manage customer product orders</p>
+        </div>
+
+        {% if orders|length > 0 %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <div class="order-id">Order #{{ order.id }}</div>
+                        <div class="order-meta">
+                            <span>👤 {{ order.customer.name }}</span>
+                            <span>📅 {{ order.created_at.strftime('%B %d, %Y') }}</span>
+                            <span>💰 ₹{{ order.total_amount|int }}</span>
+                            <span>{{ order.order_type|title }}</span>
+                        </div>
+                    </div>
+                    <span class="status-badge status-{{ order.status }}">{{ order.status }}</span>
+                </div>
+
+                {% if order.delivery_address %}
+                <p style="font-size: 13px; color: #686b78; margin-bottom: 12px;">
+                    <strong>Delivery Address:</strong> {{ order.delivery_address }}
+                </p>
+                {% endif %}
+
+                <div class="order-items">
+                    <div style="font-weight: 600; margin-bottom: 12px; font-size: 14px;">Order Items:</div>
+                    {% for item in order.items %}
+                    <div class="order-item">
+                        <span style="font-size: 14px;">{{ item.product.name }} × {{ item.quantity }}</span>
+                        <span style="font-weight: 600;">₹{{ (item.price * item.quantity)|int }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div style="font-size: 64px;">🛍️</div>
+            <h3 style="font-size: 24px; color: #1c1c1c; margin: 20px 0 12px;">No Orders Yet</h3>
+            <p style="color: #686b78;">Product orders will appear here</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

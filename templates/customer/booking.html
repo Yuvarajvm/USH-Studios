@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book {{ service.name }} - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 16px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .booking-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 32px;
+        }
+
+        .booking-form {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e9eaed;
+        }
+
+        .booking-form h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9eaed;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .time-slot {
+            padding: 12px;
+            border: 2px solid #e9eaed;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .time-slot:hover {
+            border-color: #667eea;
+            background: #667eea10;
+        }
+
+        .time-slot.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+
+        .booking-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #e9eaed;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e9eaed;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .summary-item strong {
+            color: #1c1c1c;
+        }
+
+        .summary-total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e9eaed;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="logo">GlamHub</a>
+        </div>
+    </nav>
+
+    <div class="booking-container">
+        <div class="booking-form">
+            <h2>Book Your Appointment</h2>
+            
+            <form method="POST" action="{{ url_for('booking', service_id=service.id) }}">
+                <div class="form-group">
+                    <label>Select Date</label>
+                    <input type="date" name="date" required min="{{ (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d') }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Select Time</label>
+                    <input type="time" name="time" required min="09:00" max="20:00">
+                </div>
+
+                <div class="form-group">
+                    <label>Select Staff (Optional)</label>
+                    <select name="staff_id">
+                        <option value="">Any Available Staff</option>
+                        {% for staff in staff_list %}
+                        <option value="{{ staff.id }}">{{ staff.name }} - {{ staff.specialization }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Special Requests (Optional)</label>
+                    <textarea name="notes" rows="4" placeholder="Any special requirements or preferences..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Confirm Booking</button>
+            </form>
+        </div>
+
+        <div class="booking-summary">
+            <div class="summary-title">Booking Summary</div>
+            
+            <div class="summary-item">
+                <span>Service</span>
+                <strong>{{ service.name }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Salon</span>
+                <strong>{{ salon.name }}</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Duration</span>
+                <strong>{{ service.duration_minutes }} mins</strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Location</span>
+                <strong>{{ salon.city }}</strong>
+            </div>
+
+            <div class="summary-total">
+                <span>Total Amount</span>
+                <span>₹{{ service.price|int }}</span>
+            </div>
+
+            <div style="margin-top: 20px; padding: 16px; background: #f9fafb; border-radius: 8px; font-size: 13px; color: #686b78;">
+                <strong style="color: #1c1c1c;">Payment:</strong> Cash on Service
+            </div>
+        </div>
+    </div>
+</body>
+</html>

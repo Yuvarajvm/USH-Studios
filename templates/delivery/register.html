@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Partner Registration - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 48px 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo p {
+            font-size: 14px;
+            color: #686b78;
+            margin-top: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e9eaed;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #fc8019;
+            box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 128, 25, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #686b78;
+        }
+
+        .login-link a {
+            color: #fc8019;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .info-box {
+            background: #fff4e6;
+            border: 1px solid #fc8019;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fc8019;
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .info-box li {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">
+            <h1>🚗 GlamHub Delivery</h1>
+            <p>Join as a delivery partner and earn on your schedule</p>
+        </div>
+
+        <div class="info-box">
+            <h4>✨ Why Join Us?</h4>
+            <ul>
+                <li>Flexible working hours</li>
+                <li>Competitive earnings</li>
+                <li>Weekly payouts</li>
+                <li>Insurance coverage</li>
+            </ul>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('delivery_register') }}">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address *</label>
+                <input type="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number *</label>
+                <input type="tel" name="phone" required placeholder="Enter your phone number">
+            </div>
+
+            <div class="form-group">
+                <label>Password *</label>
+                <input type="password" name="password" required placeholder="Create a password">
+            </div>
+
+            <div class="form-group">
+                <label>Vehicle Type *</label>
+                <select name="vehicle_type" required>
+                    <option value="">Select Vehicle</option>
+                    <option value="Bike">Bike/Motorcycle</option>
+                    <option value="Scooter">Scooter</option>
+                    <option value="Car">Car</option>
+                    <option value="Bicycle">Bicycle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Vehicle Registration Number *</label>
+                <input type="text" name="vehicle_number" required placeholder="e.g., MH01AB1234">
+            </div>
+
+            <button type="submit" class="btn-submit">Register as Delivery Partner</button>
+        </form>
+
+        <div class="login-link">
+            Already registered? <a href="{{ url_for('delivery_login') }}">Login here</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Orders - GlamHub Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            padding: 20px;
+            color: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #686b78;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid #e9eaed;
+            padding-bottom: 0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #686b78;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .tab.active {
+            color: #fc8019;
+            border-bottom-color: #fc8019;
+        }
+
+        .tab:hover {
+            color: #fc8019;
+        }
+
+        .earnings-card {
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .earnings-card h3 {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .earnings-amount {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #fc8019;
+        }
+
+        .order-card.accepted {
+            border-left-color: #667eea;
+        }
+
+        .order-card.completed {
+            border-left-color: #48c479;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e9eaed;
+        }
+
+        .order-id {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 4px;
+        }
+
+        .order-time {
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pending, .status-preparing {
+            background: #fff4e6;
+            color: #ff9900;
+        }
+
+        .status-out_for_delivery {
+            background: #e6f4ff;
+            color: #0066cc;
+        }
+
+        .status-delivered {
+            background: #e6ffe6;
+            color: #00cc66;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .detail-icon {
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #686b78;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .order-items {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .order-items h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 12px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-accept {
+            flex: 1;
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-complete {
+            flex: 1;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: white;
+            color: #ff6b6b;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 2px solid #ff6b6b;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 16px;
+            padding: 80px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #1c1c1c;
+            margin: 20px 0 12px;
+        }
+
+        .empty-state p {
+            color: #686b78;
+        }
+
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>🚗</span>
+                <span>GlamHub Delivery</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('delivery_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('delivery_orders') }}" class="active">Orders</a>
+                <a href="{{ url_for('delivery_history') }}">History</a>
+                <a href="{{ url_for('delivery_logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Active Orders</h1>
+            <p>Manage your delivery orders</p>
+        </div>
+
+        <div class="earnings-card">
+            <h3>Today's Earnings</h3>
+            <div class="earnings-amount">₹0</div>
+            <p style="opacity: 0.9; margin-top: 8px;">0 deliveries completed</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('available')">Available ({{ available_orders|length }})</button>
+            <button class="tab" onclick="showTab('accepted')">Accepted ({{ accepted_orders|length }})</button>
+            <button class="tab" onclick="showTab('completed')">Completed ({{ completed_orders|length }})</button>
+        </div>
+
+        <!-- Available Orders Tab -->
+        <div id="available-orders" class="orders-list">
+            {% if available_orders|length > 0 %}
+                {% for order in available_orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Order #{{ order.id }}</div>
+                            <div class="order-time">Placed {{ order.created_at.strftime('%H:%M') }}</div>
+                        </div>
+                        <span class="status-badge status-{{ order.status }}">{{ order.status|replace('_', ' ')|title }}</span>
+                    </div>
+
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">🏪</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Pickup From</div>
+                                <div class="detail-value">{{ order.salon.name }}</div>
+                                <div style="font-size: 13px; color: #686b78; margin-top: 4px;">{{ order.salon.address }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Deliver To</div>
+                                <div class="detail-value">{{ order.customer.name }}</div>
+                                <div style="font-size: 13px; color: #686b78; margin-top: 4px;">{{ order.delivery_address }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">💰</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Order Value</div>
+                                <div class="detail-value">₹{{ order.total_amount|int }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">🚚</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Delivery Fee</div>
+                                <div class="detail-value" style="color: #48c479;">₹{{ order.delivery_fee|int }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <h4>Order Items ({{ order.items|length }})</h4>
+                        {% for item in order.items %}
+                        <div class="item">
+                            <span>{{ item.product.name }} × {{ item.quantity }}</span>
+                            <span>₹{{ (item.price * item.quantity)|int }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="order-actions">
+                        <button class="btn-accept" onclick="acceptOrder({{ order.id }})">
+                            ✓ Accept Order
+                        </button>
+                        <button class="btn-secondary" onclick="rejectOrder({{ order.id }})">
+                            ✗ Reject
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 64px; margin-bottom: 20px;">📦</div>
+                    <h3>No Available Orders</h3>
+                    <p>New orders will appear here when customers place orders</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Accepted Orders Tab -->
+        <div id="accepted-orders" class="orders-list" style="display: none;">
+            {% if accepted_orders|length > 0 %}
+                {% for order in accepted_orders %}
+                <div class="order-card accepted">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Order #{{ order.id }}</div>
+                            <div class="order-time">Accepted {{ order.created_at.strftime('%H:%M') }}</div>
+                        </div>
+                        <span class="status-badge status-{{ order.status }}">Out for Delivery</span>
+                    </div>
+
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Deliver To</div>
+                                <div class="detail-value">{{ order.customer.name }}</div>
+                                <div style="font-size: 13px; color: #686b78; margin-top: 4px;">{{ order.delivery_address }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">📞</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Customer Phone</div>
+                                <div class="detail-value">{{ order.customer.phone }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">💰</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Order Value</div>
+                                <div class="detail-value">₹{{ order.total_amount|int }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">🚚</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Your Earnings</div>
+                                <div class="detail-value" style="color: #48c479;">₹{{ order.delivery_fee|int }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-actions">
+                        <button class="btn-complete" onclick="completeOrder({{ order.id }})">
+                            ✓ Mark as Delivered
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🚚</div>
+                    <h3>No Accepted Orders</h3>
+                    <p>Orders you accept will appear here</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Completed Orders Tab -->
+        <div id="completed-orders" class="orders-list" style="display: none;">
+            {% if completed_orders|length > 0 %}
+                {% for order in completed_orders %}
+                <div class="order-card completed">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Order #{{ order.id }}</div>
+                            <div class="order-time">Delivered {{ order.delivered_at.strftime('%H:%M') if order.delivered_at else 'N/A' }}</div>
+                        </div>
+                        <span class="status-badge status-{{ order.status }}">Delivered</span>
+                    </div>
+
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Delivered To</div>
+                                <div class="detail-value">{{ order.customer.name }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-icon">🚚</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Earnings</div>
+                                <div class="detail-value" style="color: #48c479;">₹{{ order.delivery_fee|int }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 64px; margin-bottom: 20px;">✓</div>
+                    <h3>No Completed Deliveries</h3>
+                    <p>Your completed deliveries will appear here</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all order lists
+            document.getElementById('available-orders').style.display = 'none';
+            document.getElementById('accepted-orders').style.display = 'none';
+            document.getElementById('completed-orders').style.display = 'none';
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab and add active class
+            if (tabName === 'available') {
+                document.getElementById('available-orders').style.display = 'flex';
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else if (tabName === 'accepted') {
+                document.getElementById('accepted-orders').style.display = 'flex';
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            } else if (tabName === 'completed') {
+                document.getElementById('completed-orders').style.display = 'flex';
+                document.querySelectorAll('.tab')[2].classList.add('active');
+            }
+        }
+
+        function acceptOrder(orderId) {
+            if (confirm('Accept this delivery order?')) {
+                fetch(`/delivery/order/accept/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order accepted! You can now pick up the items.');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unable to accept order'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error accepting order. Please try again.');
+                });
+            }
+        }
+
+        function rejectOrder(orderId) {
+            if (confirm('Reject this order? It will be offered to other delivery partners.')) {
+                fetch(`/delivery/order/reject/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order rejected.');
+                        window.location.reload();
+                    } else {
+                        alert('Error rejecting order.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error rejecting order. Please try again.');
+                });
+            }
+        }
+
+        function completeOrder(orderId) {
+            if (confirm('Mark this order as delivered? This cannot be undone.')) {
+                fetch(`/delivery/order/complete/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order completed! Earnings added to your account.');
+                        window.location.reload();
+                    } else {
+                        alert('Error: ' + (data.error || 'Unable to complete order'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error completing order. Please try again.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

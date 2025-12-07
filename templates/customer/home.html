@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlamHub - Book Beauty & Salon Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #1c1c1c;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar - Swiggy/Zomato Style */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #3d4152;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: 2px solid #667eea;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 64px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 52px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            padding: 16px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box button {
+            background: #fc8019;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-box button:hover {
+            background: #e67415;
+            transform: scale(1.02);
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+
+        .trust-badge-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .trust-badge-text h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .trust-badge-text p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        /* Categories Section */
+        .categories {
+            padding: 80px 20px;
+            background: #f9fafb;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: #686b78;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 24px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 32px 20px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e9eaed;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .category-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .category-card p {
+            font-size: 13px;
+            color: #93959f;
+            margin: 0;
+        }
+
+        /* Featured Salons */
+        .featured-salons {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .salon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .salon-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #e9eaed;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .salon-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .salon-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .salon-content {
+            padding: 20px;
+        }
+
+        .salon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .salon-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 4px;
+        }
+
+        .salon-rating {
+            background: #48c479;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .salon-location {
+            color: #93959f;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .salon-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e9eaed;
+        }
+
+        .salon-cta {
+            background: #667eea;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1c1c1c;
+            color: white;
+            padding: 60px 20px 30px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .trust-badges {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .salon-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="logo">GlamHub</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('search') }}">Salons</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('my_bookings') }}">My Bookings</a>
+                    <a href="{{ url_for('cart') }}">Cart</a>
+                    <a href="{{ url_for('customer_logout') }}" class="btn-secondary">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('customer_login') }}" class="btn-secondary">Login</a>
+                    <a href="{{ url_for('customer_register') }}" class="btn-primary">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Beauty & Wellness Services at Your Doorstep</h1>
+                <p>Book trusted salon services, order premium beauty products, and get them delivered. All in one place.</p>
+                
+                <form action="{{ url_for('search') }}" method="GET" class="search-box">
+                    <input type="text" name="city" placeholder="Enter your location" required>
+                    <button type="submit">Search Salons</button>
+                </form>
+
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <div class="trust-badge-icon">✓</div>
+                        <div class="trust-badge-text">
+                            <h3>500+</h3>
+                            <p>Verified Salons</p>
+                        </div>
+                    </div>
+                    <div class="trust-badge">
+                        <div class="trust-badge-icon">⭐</div>
+                        <div class="trust-badge-text">
+                            <h3>4.8/5</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                    <div class="trust-badge">
+                        <div class="trust-badge-icon">👥</div>
+                        <div class="trust-badge-text">
+                            <h3>50K+</h3>
+                            <p>Happy Customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=600&fit=crop" alt="Salon Services">
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Explore Our Services</h2>
+                <p>Choose from a wide range of beauty and wellness services</p>
+            </div>
+            <div class="category-grid">
+                {% for category in categories %}
+                <a href="{{ url_for('search', category=category) }}" class="category-card">
+                    <div class="category-icon">
+                        {% if category == 'Haircut' %}💇
+                        {% elif category == 'Facial' %}✨
+                        {% elif category == 'Massage' %}💆
+                        {% elif category == 'Spa' %}🛁
+                        {% elif category == 'Makeup' %}💄
+                        {% elif category == 'Manicure' %}💅
+                        {% endif %}
+                    </div>
+                    <h3>{{ category }}</h3>
+                    <p>Premium services</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Salons -->
+    <section class="featured-salons">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Top-Rated Salons Near You</h2>
+                <p>Handpicked salons with verified reviews</p>
+            </div>
+            <div class="salon-grid">
+                {% for salon in salons %}
+                <a href="{{ url_for('salon_detail', salon_id=salon.id) }}" class="salon-card">
+                    <img src="{{ salon.image_url or 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&h=300&fit=crop' }}" 
+                         alt="{{ salon.name }}" class="salon-image">
+                    <div class="salon-content">
+                        <div class="salon-header">
+                            <div>
+                                <div class="salon-name">{{ salon.name }}</div>
+                                <div class="salon-location">📍 {{ salon.city }}</div>
+                            </div>
+                            <div class="salon-rating">⭐ {{ "%.1f"|format(salon.rating) }}</div>
+                        </div>
+                        <div class="salon-footer">
+                            <div style="font-size: 14px; color: #686b78;">
+                                {{ salon.total_reviews }} reviews
+                            </div>
+                            <button class="salon-cta">Book Now</button>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <h3>GlamHub</h3>
+            <p>© 2025 GlamHub. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

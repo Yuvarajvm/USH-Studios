@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 48px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #48c479 0%, #3aa561 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            font-size: 50px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 16px;
+        }
+
+        .order-info {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .cod-badge {
+            background: #fff4e6;
+            color: #fc8019;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 16px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #fc8019 0%, #ff6b6b 100%);
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        
+        <h1>Order Placed Successfully!</h1>
+        <p style="color: #686b78; margin-bottom: 8px;">Your order has been confirmed</p>
+        
+        <div class="cod-badge">💵 Cash on Delivery</div>
+
+        <div class="order-info">
+            <div class="info-row">
+                <span style="color: #686b78;">Order ID</span>
+                <span style="font-weight: 600;">#{{ order.id }}</span>
+            </div>
+            <div class="info-row">
+                <span style="color: #686b78;">Total Amount</span>
+                <span style="font-weight: 600; color: #fc8019; font-size: 20px;">₹{{ order.total_amount|int }}</span>
+            </div>
+            <div class="info-row">
+                <span style="color: #686b78;">Delivery Address</span>
+                <span style="font-weight: 600; text-align: right;">{{ order.delivery_address }}</span>
+            </div>
+            <div class="info-row">
+                <span style="color: #686b78;">Status</span>
+                <span style="background: #fff4e6; color: #ff9900; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">Pending</span>
+            </div>
+        </div>
+
+        <div style="background: #e6f4ff; border: 1px solid #0066cc; border-radius: 8px; padding: 16px; margin: 24px 0; font-size: 14px; color: #0066cc;">
+            🚚 A delivery partner will be assigned soon. Please keep ₹{{ order.total_amount|int }} ready for payment.
+        </div>
+
+        <a href="{{ url_for('home') }}" class="btn">Continue Shopping</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ salon.name }} - GlamHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f9fafb;
+            color: #1c1c1c;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #3d4152;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Hero Section */
+        .salon-hero {
+            background: white;
+            padding: 40px 20px;
+            border-bottom: 1px solid #e9eaed;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+        }
+
+        .salon-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .salon-images img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .salon-images img:hover {
+            transform: scale(1.05);
+        }
+
+        .salon-images img:first-child {
+            grid-column: 1 / -1;
+            height: 400px;
+        }
+
+        .salon-info-card {
+            background: white;
+            border: 2px solid #e9eaed;
+            border-radius: 12px;
+            padding: 24px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .salon-name-section {
+            margin-bottom: 20px;
+        }
+
+        .salon-name-section h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1c1c1c;
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #48c479;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 12px;
+        }
+
+        .review-count {
+            color: #686b78;
+            font-size: 14px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 16px 0;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .info-icon {
+            font-size: 20px;
+            min-width: 24px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #3d4152;
+            line-height: 1.6;
+        }
+
+        .verified-badge {
+            background: #48c47915;
+            color: #48c479;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 32px;
+            border-bottom: 2px solid #e9eaed;
+            margin-bottom: 32px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 16px 4px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #686b78;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid #e9eaed;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .service-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 4px;
+        }
+
+        .service-category {
+            font-size: 12px;
+            color: #686b78;
+            background: #f5f5f5;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: #686b78;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e9eaed;
+        }
+
+        .service-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .service-duration {
+            font-size: 13px;
+            color: #686b78;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .book-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .book-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e9eaed;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+
+        .product-content {
+            padding: 16px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 8px;
+        }
+
+        .product-description {
+            font-size: 13px;
+            color: #686b78;
+            margin-bottom: 12px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1c1c1c;
+        }
+
+        .add-cart-btn {
+            background: #fc8019;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* Reviews Section */
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e9eaed;
+        }
+
+        .rating-summary {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .rating-number {
+            font-size: 64px;
+            font-weight: 700;
+            color: #1c1c1c;
+            line-height: 1;
+        }
+
+        .rating-stars {
+            font-size: 24px;
+            color: #ffc107;
+            margin-top: 8px;
+        }
+
+        .rating-bars {
+            flex: 1;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        .bar-label {
+            font-size: 14px;
+            color: #686b78;
+            min-width: 50px;
+        }
+
+        .bar-fill {
+            flex: 1;
+            height: 8px;
+            background: #e9eaed;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-progress {
+            height: 100%;
+            background: #48c479;
+            border-radius: 4px;
+        }
+
+        .bar-count {
+            font-size: 14px;
+            color: #686b78;
+            min-width: 30px;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-card {
+            background: white;
+            border: 1px solid #e9eaed;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .reviewer-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .reviewer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .reviewer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .review-date {
+            font-size: 13px;
+            color: #686b78;
+        }
+
+        .review-rating {
+            background: #48c479;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .review-comment {
+            font-size: 14px;
+            color: #3d4152;
+            line-height: 1.8;
+        }
+
+        /* Staff Section */
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .staff-card {
+            background: white;
+            border: 1px solid #e9eaed;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .staff-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .staff-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 4px;
+        }
+
+        .staff-specialization {
+            font-size: 14px;
+            color: #686b78;
+        }
+
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+            }
+
+            .salon-info-card {
+                position: static;
+            }
+
+            .salon-images {
+                grid-template-columns: 1fr;
+            }
+
+            .salon-images img:first-child {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="logo">GlamHub</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('search') }}">Salons</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('customer_logout') }}" class="btn-primary">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('customer_login') }}" class="btn-primary">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Salon Hero -->
+    <section class="salon-hero">
+        <div class="hero-container">
+            <div class="salon-images">
+                <img src="{{ salon.image_url or 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=800' }}" alt="{{ salon.name }}">
+                <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop" alt="Interior">
+                <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400&h=300&fit=crop" alt="Services">
+                <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&h=300&fit=crop" alt="Products">
+            </div>
+
+            <div class="salon-info-card">
+                <div class="salon-name-section">
+                    <h1>{{ salon.name }}</h1>
+                    <div>
+                        <span class="rating-badge">⭐ {{ "%.1f"|format(salon.rating) }}</span>
+                        <span class="review-count">{{ salon.total_reviews }} reviews</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div class="info-text">
+                        <strong>Address</strong><br>
+                        {{ salon.address }}, {{ salon.city }}, {{ salon.pincode }}
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">📞</div>
+                    <div class="info-text">
+                        <strong>Phone</strong><br>
+                        {{ salon.phone }}
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">⏰</div>
+                    <div class="info-text">
+                        <strong>Hours</strong><br>
+                        Open Daily: 9:00 AM - 9:00 PM
+                    </div>
+                </div>
+
+                {% if salon.is_verified %}
+                <div class="verified-badge">
+                    ✓ Verified Partner
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('services')">Services ({{ services|length }})</div>
+            <div class="tab" onclick="switchTab('products')">Products ({{ products|length }})</div>
+            <div class="tab" onclick="switchTab('reviews')">Reviews ({{ salon.total_reviews }})</div>
+            <div class="tab" onclick="switchTab('staff')">Our Team ({{ staff|length }})</div>
+            <div class="tab" onclick="switchTab('about')">About</div>
+        </div>
+
+        <!-- Services Tab -->
+        <div id="services" class="tab-content active">
+            <div class="services-grid">
+                {% for service in services %}
+                <div class="service-card">
+                    <div class="service-header">
+                        <div>
+                            <div class="service-name">{{ service.name }}</div>
+                            <span class="service-category">{{ service.category }}</span>
+                        </div>
+                    </div>
+                    <p class="service-description">{{ service.description }}</p>
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="price-amount">₹{{ service.price|int }}</span>
+                            <span class="service-duration">⏱ {{ service.duration_minutes }} mins</span>
+                        </div>
+                        <a href="{{ url_for('booking', service_id=service.id) }}" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products" class="tab-content">
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ product.image_url or 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=300&fit=crop' }}" 
+                         alt="{{ product.name }}" class="product-image">
+                    <div class="product-content">
+                        <div class="product-name">{{ product.name }}</div>
+                        <p class="product-description">{{ product.description }}</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹{{ product.price|int }}</span>
+                            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" style="display: inline;">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="add-cart-btn">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div id="reviews" class="tab-content">
+            <div class="reviews-header">
+                <div class="rating-summary">
+                    <div>
+                        <div class="rating-number">{{ "%.1f"|format(salon.rating) }}</div>
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <div style="font-size: 14px; color: #686b78; margin-top: 8px;">{{ salon.total_reviews }} reviews</div>
+                    </div>
+                    <div class="rating-bars">
+                        {% for rating in [5, 4, 3, 2, 1] %}
+                        <div class="rating-bar">
+                            <span class="bar-label">{{ rating }} ⭐</span>
+                            <div class="bar-fill">
+                                <div class="bar-progress" style="width: {{ (rating_counts.get(rating, 0) / salon.total_reviews * 100) if salon.total_reviews > 0 else 0 }}%"></div>
+                            </div>
+                            <span class="bar-count">{{ rating_counts.get(rating, 0) }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">{{ review.user.name[0] }}</div>
+                            <div>
+                                <div class="reviewer-name">{{ review.user.name }}</div>
+                                <div class="review-date">{{ review.created_at.strftime('%B %d, %Y') }}</div>
+                            </div>
+                        </div>
+                        <div class="review-rating">⭐ {{ review.rating }}</div>
+                    </div>
+                    <p class="review-comment">{{ review.comment }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Staff Tab -->
+        <div id="staff" class="tab-content">
+            <div class="staff-grid">
+                {% for member in staff %}
+                <div class="staff-card">
+                    <div class="staff-avatar">{{ member.name[0] }}</div>
+                    <div class="staff-name">{{ member.name }}</div>
+                    <div class="staff-specialization">{{ member.specialization }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- About Tab -->
+        <div id="about" class="tab-content">
+            <div style="background: white; padding: 32px; border-radius: 12px; border: 1px solid #e9eaed;">
+                <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px;">About {{ salon.name }}</h2>
+                <p style="font-size: 16px; color: #3d4152; line-height: 1.8; margin-bottom: 24px;">
+                    {{ salon.description }}
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-top: 32px;">
+                    <div style="padding: 20px; background: #f9fafb; border-radius: 8px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">✓</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">Verified Partner</div>
+                        <div style="font-size: 14px; color: #686b78;">Background checked</div>
+                    </div>
+                    <div style="padding: 20px; background: #f9fafb; border-radius: 8px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">🏆</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">Award Winning</div>
+                        <div style="font-size: 14px; color: #686b78;">Best salon 2024</div>
+                    </div>
+                    <div style="padding: 20px; background: #f9fafb; border-radius: 8px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">💯</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">100% Hygienic</div>
+                        <div style="font-size: 14px; color: #686b78;">Sanitized tools</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
