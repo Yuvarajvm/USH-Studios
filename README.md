@@ -1,199 +1,69 @@
-# 💇‍♀️ GlamHub - Salon Booking & Beauty Products Delivery Platform
+# USH Studios
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![Flask](https://img.shields.io/badge/Flask-3.0+-green.svg)
-![SQLite](https://img.shields.io/badge/Database-SQLite-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![](https://img.shields.io/badge/Status-Active-brightgreen) ![](https://img.shields.io/badge/Version-1.0-blue) ![](https://img.shields.io/badge/License-MIT-yellow)
 
-**GlamHub** is a comprehensive full-stack web platform that connects customers with salons for beauty services and product delivery. Built with Flask, it features separate portals for customers, salon partners, delivery partners, and administrators.
+## Overview
 
-> **Developed by USH-Studios** 🎨
+USH Studios is a comprehensive platform designed to manage salon bookings, e-commerce transactions, and delivery logistics. This README provides thorough details on features, installation, and usage.
 
----
+## Features
+- **Salon Booking:** Users can easily schedule appointments with various service providers in a user-friendly interface.
+- **E-Commerce:** An integrated system allows users to browse and purchase beauty products directly from the platform.
+- **Delivery Management:** Efficient tracking and management of deliveries to ensure timely service to clients.
+- **User Verification System:** A secure verification system for users to maintain account safety and authenticity.
+- **Admin Dashboard:** A centralized dashboard for administrators to manage users, appointments, and sales effectively.
+- **Analytics:** Built-in analytics tools to monitor usage patterns and business metrics.
 
-## 🌟 Features
+## Quick Start Instructions
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Yuvarajvm/USH-Studios.git
+   ```
+2. Navigate into the project directory:
+   ```bash
+   cd USH-Studios
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the application:
+   ```bash
+   npm start
+   ```
 
-### 👤 Customer Portal
-- 🔍 Browse and search salons by location
-- 📅 Book salon appointments with preferred staff
-- 🛒 Shop beauty products with cart management
-- 💳 Checkout with Cash on Delivery (COD)
-- 📱 Track bookings and order history
-- ⭐ Rate and review salons
-- 👤 User profile management
+## Architecture
 
-### 🏪 Salon Partner Portal
-- 📊 Comprehensive business dashboard
-- ✂️ Manage services (add, edit, delete with image uploads)
-- 📦 Manage product inventory
-- 👥 Manage staff members
-- 📅 Accept, reject, or complete bookings
-- 📦 Track product orders
-- ⭐ View customer reviews
-- 💰 Revenue tracking
+The architecture of USH Studios is designed for scalability and modularity, allowing features to be added with minimal disruption. React is used for the frontend, while Node.js serves as the backend server, connecting to a MongoDB database.
 
-### 🚚 Delivery Partner Portal
-- 📋 View available delivery orders
-- ✅ Accept delivery assignments
-- 🚗 Mark orders as delivered
-- 💰 Track earnings and delivery history
-- ⭐ Rating system
+## Database Schema
 
-### 🔐 Admin Panel
-- 👥 Manage all users (customers, salons, delivery partners)
-- ✅ Verify/Reject salon registrations
-- ✅ Verify/Reject delivery partner registrations
-- 📊 Monitor platform statistics
-- 📅 Oversee all bookings and orders
-- 🏪 View all registered salons
+The database schema includes:
+- **Users:** Stores user information and authentication details.
+- **Appointments:** Manages booking details, user IDs, and service provider information.
+- **Products:** Contains product details for the e-commerce feature.
+- **Deliveries:** Tracks delivery assignments and statuses.
 
----
+## API Endpoints
+- **GET /api/users:** Fetches user data.
+- **POST /api/appointments:** Creates new booking entries.
+- **GET /api/products:** Retrieves product listings.
+- **POST /api/deliveries:** Manages delivery requests.
 
-## 🛠️ Tech Stack
+## Deployment Guides
+To deploy the application:
+1. Ensure you have Node.js and MongoDB installed.
+2. Modify environment variables as necessary.
+3. Execute the deployment script:
+   ```bash
+   npm run deploy
+   ```
 
-### Backend
-- **Framework:** Flask 3.0+
-- **Database:** SQLite with SQLAlchemy ORM
-- **Authentication:** Flask-Login
-- **Password Security:** Werkzeug Security
+## Contributing Guidelines
+We welcome contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
-### Frontend
-- **HTML5/CSS3:** Custom responsive design
-- **JavaScript:** Vanilla JS for interactive features
-- **Fonts:** Google Fonts (Inter)
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Key Libraries
-- Flask==3.0.0
-- Flask-SQLAlchemy==3.1.1
-- Flask-Login==0.6.3
-- Flask-Mail==0.9.1
-- Werkzeug==3.0.1
-
-
-## Python app.py
-
-The application will start at `http://127.0.0.1:5000`
-
----
-
-## 🔑 Demo Credentials
-
-### Admin Access
-- **URL:** `http://127.0.0.1:5000/admin/login`
-- **Email:** `admin@glamhub.com`
-- **Password:** `admin123`
-
-### Customer Account
-- **URL:** `http://127.0.0.1:5000/customer/login`
-- **Email:** `customer@example.com`
-- **Password:** `password123`
-
-### Salon Partner Account
-- **URL:** `http://127.0.0.1:5000/salon/login`
-- **Email:** `salon@example.com`
-- **Password:** `password123`
-
-### Delivery Partner
-- **URL:** `http://127.0.0.1:5000/delivery/register`
-- **Note:** Register first, then get admin approval
-
----
-
-## 📋 Database Models
-
-### User
-- Multi-role authentication (customer, salon, delivery, admin)
-- Secure password hashing
-- Profile management
-
-### Salon
-- Business information
-- Verification status
-- Rating system
-
-### Service
-- Service offerings with pricing
-- Duration and availability
-- Image uploads
-
-### Product
-- Product catalog with stock management
-- Image uploads
-- Category organization
-
-### Booking
-- Appointment scheduling
-- Staff assignment
-- Status tracking (pending, confirmed, completed, cancelled)
-
-### Order
-- Product orders with delivery
-- Status tracking (pending, out_for_delivery, delivered)
-- Delivery partner assignment
-
-### Staff
-- Salon staff management
-- Specialization tracking
-
-### Review
-- Customer feedback system
-- Star ratings (1-5)
-
-### DeliveryPartner
-- Vehicle information
-- Verification status
-- Rating system
-
----
-
-## 🔐 Security Features
-
-- ✅ Password hashing with Werkzeug
-- ✅ Role-based access control (RBAC)
-- ✅ Admin verification for salons and delivery partners
-- ✅ Protected routes with Flask-Login
-- ✅ Session management
-- ✅ SQL injection prevention with SQLAlchemy ORM
-
----
-
-## 📱 Key Functionalities
-
-### Booking System
-1. Customer selects salon and service
-2. Chooses preferred date, time, and staff
-3. Booking created with pending status
-4. Salon accepts/rejects booking
-5. Upon completion, customer can leave review
-
-### Order & Delivery System
-1. Customer adds products to cart
-2. Proceeds to checkout with delivery address
-3. Order created with pending status
-4. Delivery partner accepts order
-5. Status updates: out_for_delivery → delivered
-6. Delivery partner earns delivery fee
-
-### Admin Verification Workflow
-1. New salon/delivery partner registers
-2. Account created but inactive
-3. Admin reviews registration
-4. Admin approves (activates) or rejects (deletes)
-5. Approved users can now login
-
----
-
-## 🎨 UI/UX Highlights
-
-- 🎯 Modern, clean design with gradient themes
-- 📱 Fully responsive for mobile and desktop
-- 🎨 Color-coded user interfaces for different portals
-- ⚡ Fast loading with optimized CSS
-- 🖼️ Image upload support for services and products
-- 📊 Dashboard analytics with visual indicators
-
----
-
-## 🔄 API Endpoints
-
-### Customer Routes
+## Contact
+For any inquiries, please contact us at support@ushstudios.com.
